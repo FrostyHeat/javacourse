@@ -1,0 +1,48 @@
+// Практика #1
+class Ex1 extends Exception {}
+class Ex2 extends Ex1 {}
+class Ex3 extends Ex2 {}
+
+public class ExceptionHandling {
+    public static void main(String[] args) {
+        // 1. Одинаковая обработка разных исключений
+        try {
+            throw new IOException();
+        } catch (IOException | SQLException e) { // | для разных исключений
+            System.out.println("Ошибка ввода-вывода или БД");
+        }
+        
+        // 2. Иерархия исключений
+        try {
+            throw new Ex3(); // Самое конкретное
+        } catch (Ex3 e) {
+            System.out.println("Поймали Ex3");
+        } catch (Ex2 e) { // Не выполнится
+            System.out.println("Поймали Ex2");
+        } catch (Ex1 e) { // Не выполнится
+            System.out.println("Поймали Ex1");
+        }
+        
+        // Или наоборот:
+        try {
+            throw new Ex3();
+        } catch (Ex1 e) { // Поймает все: Ex1, Ex2, Ex3
+            System.out.println("Поймали родителя");
+        }
+        
+        // ОШИБКА: в | нельзя использовать из одной иерархии
+        // catch (Ex1 | Ex2 e) { } // Ex2 подкласс Ex1 - ошибка
+    }
+}
+
+// Практика #2
+class FinalCatch {
+    public static void main(String[] args) {
+        try {
+            throw new Exception("test");
+        } catch (final Exception e) { // final - нельзя переприсвоить ссылку
+            // e = new Exception(); // ОШИБКА: нельзя изменить final переменную
+            System.out.println(e.getMessage());
+        }
+    }
+}
